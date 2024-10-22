@@ -2,17 +2,20 @@
 This project is a NestJS-based product inventory management API that provides functionalities to manage products, including adding, updating, deleting products, as well as event logging and pagination.
 
 ## Table of Contents
-Project Setup
-Database Configuration
-API Endpoints
-Product Routes
-Event Log Routes
-Testing the API
-Event Logging
-Pagination
-Handling Database Errors
-Project Setup
-Prerequisites
+
+- Project Setup
+- Database Configuration
+- API Endpoints
+- Product Routes
+- Event Log Routes
+- Testing the API
+- Event Logging
+- Pagination
+- Handling Database Errors
+- Project Setup
+
+## Prerequisites
+
 Node.js (v16 or higher)
 npm or yarn
 PostgreSQL (or any supported SQL database)
