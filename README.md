@@ -1,85 +1,176 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Product Inventory Management API
+This project is a NestJS-based product inventory management API that provides functionalities to manage products, including adding, updating, deleting products, as well as event logging and pagination.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Table of Contents
+Project Setup
+Database Configuration
+API Endpoints
+Product Routes
+Event Log Routes
+Testing the API
+Event Logging
+Pagination
+Handling Database Errors
+Project Setup
+Prerequisites
+Node.js (v16 or higher)
+npm or yarn
+PostgreSQL (or any supported SQL database)
+Installation
+Clone the repository:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
+Copy code
 ```bash
-$ npm install
+git clone https://github.com/your-username/inventory-management-api.git
+cd inventory-management-api
 ```
 
-## Compile and run the project
+## Install the dependencies:
+
+```bach
+npm install
+# or using yarn
+yarn install
+```
+Set up the .env file: Create a .env file in the root directory and provide the required environment variables for the database connection.
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=your_db_user
+DB_PASS=your_db_password
+DB_NAME=product_db
 ```
 
-## Run tests
+Run database migrations (if applicable):
+
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run migration:run
 ```
 
-## Resources
+## Start the application:
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+npm run start:dev
+``` 
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+The API will now be running at http://localhost:3000.
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```python
+TypeOrmModule.forRoot({
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: +process.env.DB_PORT,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  entities: [Product, EventLog],
+  synchronize: true, // For dev only; use migrations for production
+});
+```
 
-## Stay in touch
+Ensure that your PostgreSQL instance is running, and the credentials match the ones in your .env file.
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+# API Endpoints
+
+## Product Routes
+
+Method	Endpoint	Description
+```bash
+GET	/product	Fetch all products
+GET	/product?limit=value&offset=value	fetch paginated products
+GET	/product/:id	Fetch a specific product by ID
+GET /product/category?name=value fetch products by category name
+GET /product/quantity?qty=value&check=value fetch filter products
+POST	/product	Add a new product
+PUT	/product/:id	Update a product by ID
+DELETE	/product/:id	Delete a product by ID
+```
+
+## Event Log Routes
+Method	Endpoint	Description
+```bash
+GET	/event-log	Fetch all event logs
+GET	/event-log/:id	Fetch event-logs for a particular product
+``` 
+
+## Testing the API
+You can test the API using tools like Postman or curl. Below are some example requests:
+
+## Add a Product
+
+```bash
+POST /products
+Content-Type: application/json
+
+{
+  "name": "Product A",
+  "quantity": 10,
+  "category": "CategoryA"
+}
+```
+
+Update a Product
+
+```bash
+PUT /products/:id
+Content-Type: application/json
+
+{
+  "name": "Updated Product",
+  "quantity": 15,
+  "category": "CategoryB"
+}
+```
+
+Delete a Product
+
+```bash
+DELETE /products/:id
+```
+
+Get Paginated Products
+
+```bash
+GET /products?offset=1&limit=10
+```
+
+Get products by Category
+
+```bash
+GET /products/category?name=CategoryB
+```
+
+## Event Logging
+The system tracks events whenever a product is:
+
+```bash
+Added
+Updated
+Deleted
+```
+
+These logs are stored in the EventLog table along with a timestamp. You can access these logs using the /event-logo endpoint.
+
+## Pagination
+The /products endpoint supports pagination using the limit and offset query parameters:
+
+limit: The maximum number of products to return.
+offset: The number of products to skip before starting to return results.
+Example:
+
+```bash
+GET /products?limit=10&offset=0
+```
+
+## Handling Database Errors
+The application handles database errors, such as:
+
+## Duplicate product names
+Violating database constraints (e.g., quantity >= 0)
+Errors are handled in the handleDbErrors method within the service layer. Custom error messages are returned based on the error code, ensuring user-friendly responses.
 
 ## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+This project is licensed under the MIT License.
