@@ -19,10 +19,10 @@ This project is a NestJS-based product inventory management API that provides fu
 Node.js (v16 or higher)
 npm or yarn
 PostgreSQL (or any supported SQL database)
-Installation
-Clone the repository:
 
-Copy code
+## Installation
+
+Clone the repository:
 ```bash
 git clone https://github.com/your-username/inventory-management-api.git
 cd inventory-management-api
@@ -30,11 +30,10 @@ cd inventory-management-api
 
 ## Install the dependencies:
 
-```bach
+```bash
 npm install
-# or using yarn
-yarn install
 ```
+
 Set up the .env file: Create a .env file in the root directory and provide the required environment variables for the database connection.
 
 ```bash
@@ -46,7 +45,6 @@ DB_NAME=product_db
 ```
 
 Run database migrations (if applicable):
-
 
 ```bash
 npm run migration:run
